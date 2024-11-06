@@ -1,6 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { navMenus } from "../utills/data";
+import { FcGoogle } from "react-icons/fc";
 
 const Navbar = ({ menuIdx }) => {
   console.log(menuIdx);
@@ -18,8 +19,10 @@ const Navbar = ({ menuIdx }) => {
         {navMenus.map((menu, idx) => (
           <li
             key={idx}
-            className="rounded-sm mb-1 border border-gray-700
-          hover:bg-gray-950 transition-all duration-300">
+            className={`rounded-sm mb-1 border border-gray-700
+             hover:bg-gray-950 transition-all duration-300 ${
+               menu.idx === menuIdx ? " bg-gray-950" : ""
+             }`}>
             <Link to={menu.to} className="flex gap-4 items-center py-2 px-10">
               {menu.icon}
               {menu.label}
@@ -28,8 +31,13 @@ const Navbar = ({ menuIdx }) => {
         ))}
       </ul>
 
-      <div>
-        <button>sign in</button>
+      <div className=" w-4/5">
+        <button
+          className="flex justify-center items-center gap-2 bg-gray-300 text-gray-900
+        py-3 px-4 rounded-md w-full">
+          <FcGoogle className="w-5 h-5" />
+          <span className="text-sm">Google login</span>
+        </button>
       </div>
     </nav>
   );
