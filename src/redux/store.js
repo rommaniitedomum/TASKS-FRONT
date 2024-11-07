@@ -2,7 +2,7 @@
 // configureStore 스토어를 생성하는 함수
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import authReducer from "./slices/authSlice";
-import apiReducer from "./slices/authSlice";
+import apiReducer from "./slices/apiSlice";
 
 const store = configureStore({
   reducer: combineReducers({
