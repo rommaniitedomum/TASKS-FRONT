@@ -2,9 +2,26 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { navMenus } from "../utills/data";
 import { FcGoogle } from "react-icons/fc";
+import { GoogleLogin, GoogleOAuthProvider } from "@react-oauth/google";
+import { jwtDecode } from "jwt-decode";
+
+// google client id 를 가저온다
+// 2 . react -oauth/google 라이브러리 설치 임포트
+//3  googleoauhtprovider 컴포넌트로 로그인 버튼 감싸기
+// 4. clientId props 로 구글 ID 전달
+// 5. google 로그인 컴포넌트 요청 및 응답 로직 처리
+// 6. onsuccess, onerror 콜백함수로 로그인 성공및 실패 처리
+
+const handleLoginSucess = (response) => {
+  console.log("success", jwtDecode(response.credential));
+};
+
+const handleLoginError = (error) => {
+  console.log("error", error);
+};
 
 const Navbar = ({ menuIdx }) => {
-  console.log(menuIdx);
+  const googleClientId = process.env.REACT_APP_GOOGLE_CLIENT_ID;
   return (
     <nav
       className="navi bg-[#212121] w-1/5 h-full rounded-sm border border-gray-500
@@ -32,12 +49,18 @@ const Navbar = ({ menuIdx }) => {
       </ul>
 
       <div className=" w-4/5">
-        <button
-          className="flex justify-center items-center gap-2 bg-gray-300 text-gray-900
+        <GoogleOAuthProvider clientId={googleClientId}>
+          <GoogleLogin
+            onSuccess={handleLoginSucess}
+            onError={handleLoginError}
+          />
+          <button
+            className="flex justify-center items-center gap-2 bg-gray-300 text-gray-900
         py-3 px-4 rounded-md w-full">
-          <FcGoogle className="w-5 h-5" />
-          <span className="text-sm">Google login</span>
-        </button>
+            <FcGoogle className="w-5 h-5" />
+            <span className="text-sm">Google login</span>
+          </button>
+        </GoogleOAuthProvider>
       </div>
     </nav>
   );
