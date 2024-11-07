@@ -20,7 +20,7 @@ const Itempanel = ({ pageTitle }) => {
       try {
         await dispatch(fetchGetItemsData(userKey)).unwrap(); // useeffect 내부 dispatch 함수를 호출해서 thunk 함수 실행
       } catch (error) {
-        console.error("failed", error);
+        console.error("its error message", error);
       }
     };
     fetchGetItems();
