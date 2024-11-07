@@ -1,9 +1,11 @@
-import React from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { navMenus } from "../utills/data";
 import { FcGoogle } from "react-icons/fc";
 import { GoogleLogin, GoogleOAuthProvider } from "@react-oauth/google";
 import { jwtDecode } from "jwt-decode";
+import { useDispatch, useSelector } from "react-redux";
+import { login } from "../redux/slices/authSlice";
 
 // google client id 를 가저온다
 // 2 . react -oauth/google 라이브러리 설치 임포트
@@ -12,16 +14,43 @@ import { jwtDecode } from "jwt-decode";
 // 5. google 로그인 컴포넌트 요청 및 응답 로직 처리
 // 6. onsuccess, onerror 콜백함수로 로그인 성공및 실패 처리
 
-const handleLoginSucess = (response) => {
-  console.log("success", jwtDecode(response.credential));
-};
-
-const handleLoginError = (error) => {
-  console.log("error", error);
-};
-
 const Navbar = ({ menuIdx }) => {
+  const dispatch = useDispatch();
   const googleClientId = process.env.REACT_APP_GOOGLE_CLIENT_ID;
+  const user = useSelector((state) => state.auth.authData);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  console.log(user);
+
+  const handleLoginSucess = useCallback(
+    (response) => {
+      try {
+        const decoded = jwtDecode(response.credential);
+        dispatch(login({ authData: decoded }));
+        setIsAuthenticated(true);
+      } catch (error) {
+        console.error("Login Handling Error", error);
+      }
+    },
+    [dispatch]
+  );
+
+  useEffect(() => {
+    const storedData = JSON.parse(localStorage.getItem("authData"));
+    if (storedData) {
+      dispatch(login({ authData: storedData }));
+      setIsAuthenticated(true);
+    }
+  }, [dispatch]);
+
+  // (response) => {
+  //   console.log("success", jwtDecode(response.credential));
+  // };
+
+  const handleLoginError = (error) => {
+    console.log("error", error);
+  };
+
   return (
     <nav
       className="navi bg-[#212121] w-1/5 h-full rounded-sm border border-gray-500
@@ -31,6 +60,7 @@ const Navbar = ({ menuIdx }) => {
         <h2 className="font-semibold text-xl">
           <Link to="/">Lorem</Link>
         </h2>
+        <p>{isAuthenticated === false ? "false" : "true"}</p>
       </div>
       <ul className="menus">
         {navMenus.map((menu, idx) => (
