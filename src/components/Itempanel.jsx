@@ -4,7 +4,6 @@ import PageTitle from "./PageTitle";
 import Item from "./Item";
 import AddItem from "./Additem";
 import { fetchGetItemsData } from "../redux/slices/apiSlice";
-
 import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import LoadingSkeleton from "./LoadingSkeleton";
@@ -47,8 +46,6 @@ const Itempanel = ({ pageTitle }) => {
                 highlightColor="#444"
                 width="100%"
                 height="25vh">
-                <LoadingSkeleton />
-                <LoadingSkeleton />
                 <LoadingSkeleton />
               </SkeletonTheme>
             ) : (

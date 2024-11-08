@@ -5,6 +5,11 @@ import Completed from "./Completed";
 import Proceeding from "./Proceeding";
 import Important from "./Important";
 
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
+import "react-confirm-alert/src/react-confirm-alert.css"; // Import css
+
 const App = () => {
   return (
     <div className="App">
@@ -15,6 +20,19 @@ const App = () => {
           <Route path="/proceeding" element={<Proceeding />} />
           <Route path="/important" element={<Important />} />
         </Routes>
+
+        <ToastContainer
+          position="bottom-center"
+          autoClose={1000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable={false}
+          pauseOnHover
+          theme="dark"
+        />
       </BrowserRouter>
     </div>
   );

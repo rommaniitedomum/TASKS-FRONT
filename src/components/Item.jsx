@@ -1,9 +1,18 @@
-import React from "react";
+import React, { useState } from "react";
 import { MdEditDocument, MdDelete } from "react-icons/md";
 import { useDispatch } from "react-redux";
-import { fetchDeleteItemData } from "../redux/slices/apiSlice";
+import {
+  fetchDeleteItemData,
+  fetchGetItemsData,
+} from "../redux/slices/apiSlice";
+
+import { confirmAlert } from "react-confirm-alert"; // Import
+import "react-confirm-alert/src/react-confirm-alert.css"; // Import css
+
+import { toast } from "react-toastify";
 
 const Item = ({ task }) => {
+  const [confirm, setConfirm] = useState(false);
   const { _id, title, description, date, iscompleted, isimportant, userid } =
     task;
   // console.log(_id, title, description, date, iscompleted, isimportant, userid);
@@ -26,22 +35,52 @@ const Item = ({ task }) => {
     return text;
   };
 
+  //custom confirm alert
+  const deleteSubmit = () => {
+    return new Promise((resolve) => {
+      confirmAlert({
+        title: "아이템 삭제 확인",
+        message: "정말 삭제 하시겠습니까?",
+        buttons: [
+          {
+            label: "Yes",
+            onClick: () => {
+              setConfirm(true);
+              resolve(true);
+            },
+          },
+          {
+            label: "No",
+            onClick: () => {
+              setConfirm(false);
+              resolve(false);
+            },
+          },
+        ],
+      });
+    });
+  };
+
   //delete item
   const handleDeleteItem = async () => {
-    const confirm = window.confirm("아이템을 삭제하시겠습니까?");
+    // const confirm = window.alert("아이템을 삭제하시겠습니까?");
 
-    if (!confirm) return;
+    const result = await deleteSubmit();
+
+    if (!result) return;
 
     if (!_id) {
-      alert("잘못된 접근입니다.");
+      toast.alert("잘못된 접근입니다.");
       return;
     }
 
     try {
-      // unwrap() 비동기 함수 await 값 인식 안될때 사용 (포장벗기기)
+      // unwrap() 비동기 함수 await 값 인식 안될때 사용 (포장벗기기); 비동기화도 포장지인가
       await dispatch(fetchDeleteItemData(_id)).unwrap();
-      alert("아이템이 삭제되었습니다.");
+      toast.success("아이템이 삭제되었습니다.");
+      await dispatch(fetchGetItemsData(userid)).unwrap();
     } catch (error) {
+      toast.error("아이템이 삭제실패.");
       console.log("Delete Item error" + error);
     }
   };
