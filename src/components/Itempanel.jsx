@@ -17,7 +17,7 @@ const Itempanel = ({ pageTitle }) => {
   const getTasksData = useSelector((state) => state.apis.getItemsData);
   const isOpen = useSelector((state) => state.modal.isOpen);
   // console.log(getTasksData);
-  console.log(isOpen);
+  // console.log(isOpen);
 
   const [loading, setLoading] = useState(false);
 

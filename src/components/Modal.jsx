@@ -3,7 +3,11 @@ import { IoMdClose } from "react-icons/io";
 import { useDispatch, useSelector } from "react-redux";
 import { closeModal } from "../redux/slices/modalSlice";
 import { toast } from "react-toastify";
-import { fetchPostItemData, fetchGetItemsData } from "../redux/slices/apiSlice";
+import {
+  fetchPostItemData,
+  fetchGetItemsData,
+  fetchUpdateItemData,
+} from "../redux/slices/apiSlice";
 
 const Modal = () => {
   const dispatch = useDispatch();
@@ -59,9 +63,11 @@ const Modal = () => {
         await dispatch(fetchPostItemData(formData)).unwrap();
         toast.success("할일이 성공적으로 추가되었습니다.");
       } else if (modalType === "update" && task) {
-        // await dispatch(fetchPostData(formData)).unwrap();
+        await dispatch(fetchUpdateItemData(formData)).unwrap();
         toast.success("할일이 성공적으로 수정되었습니다.");
       }
+
+      // console.log(formData.task);
 
       handleCloseModal();
 
@@ -100,7 +106,7 @@ const Modal = () => {
     "",
     "할일추가하기 "
   );
-  console.log(task);
+  // console.log(task);
 
   useEffect(() => {
     if ((modalType === "details" && task) || (modalType === "update" && task)) {
@@ -110,7 +116,7 @@ const Modal = () => {
         date: task.date,
         isCompleted: task.iscompleted,
         isImportant: task.isimportant,
-        userId: task._id,
+        id: task._id,
       });
     } else {
       setFormData({

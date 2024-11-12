@@ -94,6 +94,11 @@ const Item = ({ task }) => {
     dispatch(openModal({ modalType: "update", task }));
   };
 
+  const changeCompleted = () => {
+    // setIsCompleted(!isCompleted)을 호출하면 상태 업데이트가 비동기적으로 이루어지기 때문에, isCompleted의 값이 즉시 변경되지 않는다.
+    // 따라서 updateCompletedData 객체를 생성할 때 isCompleted의 이전 값이 사용된다. 이로 인해 true/false가 한 단계씩 밀리게 된다.
+  };
+
   return (
     <div className="item w-1/3 h-[25vh] p-[0.25rem]">
       <div className="w-full h-full border border-gray-500 rounded-md bg-gray-950 py-3 px-4 flex flex-col justify-between">
@@ -115,9 +120,15 @@ const Item = ({ task }) => {
           <div className="item-footer flex justify-between">
             <div className="item-footer-left flex gap-2">
               {iscompleted ? (
-                <button className="item-btn bg-green-400">completed</button>
+                <button
+                  className="item-btn bg-green-400"
+                  onClick={changeCompleted}>
+                  completed
+                </button>
               ) : (
-                <button className="hidden item-btn bg-cyan-500">
+                <button
+                  className=" item-btn bg-cyan-500"
+                  onClick={changeCompleted}>
                   Incompleted
                 </button>
               )}
