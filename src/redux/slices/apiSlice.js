@@ -1,6 +1,15 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { DELETE_TASK_API_URL, GET_TASKS_API_URL } from "../../utills/apiUrl";
-import { deleteRequest, getRequest } from "../../utills/requestMethods";
+import {
+  DELETE_TASK_API_URL,
+  GET_TASKS_API_URL,
+  POST_TASK_API_URL,
+} from "../../utills/apiUrl";
+
+import {
+  deleteRequest,
+  getRequest,
+  postRequest,
+} from "../../utills/requestMethods";
 
 const getItemsFetchThunk = (actionType, apiURL) => {
   return createAsyncThunk(actionType, async (userId) => {
@@ -14,6 +23,16 @@ export const fetchGetItemsData = getItemsFetchThunk(
   "fetchGetItems", // action type
   GET_TASKS_API_URL // 요청 url
 );
+
+const postItemsFetchThunk = (actionType, apiURL) => {
+  return createAsyncThunk(actionType, async (postData) => {
+    // console.log(postData);
+    const options = {
+      body: JSON.stringify(postData),
+    };
+    return await postRequest(apiURL, options);
+  });
+};
 
 const deleteItemFetchThunk = (actionType, apiURL) => {
   return createAsyncThunk(actionType, async (id) => {
@@ -41,6 +60,12 @@ export const fetchDeleteItemData = deleteItemFetchThunk(
   DELETE_TASK_API_URL
 );
 
+//post item
+export const fetchPostItemData = postItemsFetchThunk(
+  "fetchPostItems",
+  POST_TASK_API_URL // 요청 url
+);
+
 //create slice
 
 const apiSlice = createSlice({
@@ -49,6 +74,7 @@ const apiSlice = createSlice({
     // 초기상태
     getItemsData: null,
     deleteItemData: null,
+    postItemData: null,
   },
   extraReducers: (builder) => {
     builder
@@ -56,7 +82,10 @@ const apiSlice = createSlice({
       .addCase(fetchGetItemsData.rejected, handleRejected)
 
       .addCase(fetchDeleteItemData.fulfilled, handleFulfilled("deleteItemData"))
-      .addCase(fetchDeleteItemData.rejected, handleRejected);
+      .addCase(fetchDeleteItemData.rejected, handleRejected)
+
+      .addCase(fetchPostItemData.fulfilled, handleFulfilled("postItemData"))
+      .addCase(fetchPostItemData.rejected, handleRejected);
   },
 }); // slice 객체 저장
 
